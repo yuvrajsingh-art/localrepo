@@ -13,6 +13,12 @@ import AddItem from "./pages/AddItem";
 import EditItem from "./pages/EditItem";
 import useGetShopByCity from "./hooks/useGetShopByCity";
 import useGetItemsByCity from "./hooks/useGetItemsByCity";
+import CartPage from "./pages/CartPage";
+import CheckOut from "./pages/CheckOut";
+import OrderPlaced from "./pages/OrderPlaced";
+import MyOrders from "./pages/MyOrders";
+import useGetMyOrders from "./hooks/useGetMyOrders";
+
 export const serverUrl = "http://localhost:8000"
 function App() {
   useGetCurrentUser()
@@ -20,16 +26,17 @@ function App() {
   useGetMyShop()
   useGetShopByCity()
   useGetItemsByCity()
+  useGetMyOrders()
   const { userData } = useSelector(state => state.user)
   // const userData = JSON.parse(localStorage.getItem("userData"));
-  console.log("user data state : ",userData);
+  console.log("user data state : ", userData);
   // get data from localStorage
-const storedUserData = localStorage.getItem("userData");
+  const storedUserData = localStorage.getItem("userData");
 
-if (storedUserData) {
-  const userData = JSON.parse(storedUserData);
-  console.log(userData, "User data from localStorage");
-}
+  if (storedUserData) {
+    const userData = JSON.parse(storedUserData);
+    console.log(userData, "User data from localStorage");
+  }
 
 
 
@@ -42,6 +49,10 @@ if (storedUserData) {
       <Route path='/create-edit-shop' element={userData ? <CreateEditShop /> : <Navigate to={"/signin"} />} />
       <Route path='/add-item' element={userData ? <AddItem /> : <Navigate to={"/signin"} />} />
       <Route path='/edit-item/:itemId' element={userData ? <EditItem /> : <Navigate to={"/signin"} />} />
+      <Route path='/cart' element={userData ? <CartPage /> : <Navigate to={"/signin"} />} />
+      <Route path='/checkout' element={userData ? <CheckOut /> : <Navigate to={"/signin"} />} />
+      <Route path='/order-placed' element={userData ? <OrderPlaced /> : <Navigate to={"/signin"} />} />
+      <Route path='/my-orders' element={userData ? <MyOrders /> : <Navigate to={"/signin"} />} />
 
     </Routes>
   );

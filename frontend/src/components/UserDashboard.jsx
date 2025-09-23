@@ -44,10 +44,10 @@ function UserDashboard() {
             })
 
         }
-        return () => {cateScrollRef.current.removeEventListener("scroll", () => {
+        return () => {cateScrollRef?.current?.removeEventListener("scroll", () => {
             updateButton(cateScrollRef, setShowLeftCateButton, setShowRightCateButton)
         })
-        cateScrollRef.current.removeEventListener("scroll", () => {
+        cateScrollRef?.current?.removeEventListener("scroll", () => {
             updateButton(shopScrollRef, setShowLeftShopButton, setShowRightShopButton)
         })}
     }, [categories])
