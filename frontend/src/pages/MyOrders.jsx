@@ -18,7 +18,7 @@ function MyOrders() {
                 </div>
 
                 <div className="space-y-6">
-                  {console.log(userData.role)
+                  {console.log(myOrders)
                   }  
                     {myOrders?.map((order, index) => (
                         userData.role == "user" ? (

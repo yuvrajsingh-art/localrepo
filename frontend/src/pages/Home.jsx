@@ -8,7 +8,6 @@ import Nev from "../components/Nav";
 function Home(){
     const {userData}=useSelector(state=>state.user);
     
-    console.log(userData,"this is ");
     
     return (
 
