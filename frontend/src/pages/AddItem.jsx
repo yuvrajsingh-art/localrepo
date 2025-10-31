@@ -20,7 +20,7 @@ function AddItem() {
     const [backendImage, setBackendImage] = useState(null)
     const [category, setCategory] = useState("")
     const [foodType, setFoodType] = useState("veg")
-    const categories = ["Snacks",
+    const categories = ["Snackes",
         "Main Course",
         "Desserts",
         "Pizza",

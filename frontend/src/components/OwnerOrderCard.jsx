@@ -7,16 +7,16 @@ import { updateOrderStatus } from "../redux/userSlice";
 
 
 function OwnerOrderCard({ data }) {
-    const [availableBoys,setAvailableBoys]=useState([])
-  const dispatch = useDispatch()
+    const [availableBoys, setAvailableBoys] = useState([])
+    const dispatch = useDispatch()
     const handleUpdateStatus = async (orderId, shopId, status) => {
         try {
             const result = await axios.post(`${serverUrl}/api/order/update-status/${orderId}/${shopId}`, { status }, { withCredentials: true })
-            dispatch(updateOrderStatus({orderId,shopId,status}))
-            dispatch(updateOrderStatus({orderId,shopId,status}))
-            setAvailableBoys(result.data.availableBoys|| [])
+            dispatch(updateOrderStatus({ orderId, shopId, status }))
+            dispatch(updateOrderStatus({ orderId, shopId, status }))
+            setAvailableBoys(result.data.availableBoys || [])
             console.log(result.data)
-         } catch (error) {
+        } catch (error) {
             console.log(error);
         }
     }
@@ -27,6 +27,8 @@ function OwnerOrderCard({ data }) {
                 <h2 className="text-lg font-semibold text-gray-800 ">{data.user.fullName}</h2>
                 <p className="text-sm text-gray-500">{data.user.email}</p>
                 <p className="flex items-center gap-2 text-sm text-gray-600 mt-1"><MdPhone /><span>{data.user.mobile}</span></p>
+                {data.paymentMethod=="online"?<p className="gap-2 text-sm text-gray-600">payment: {data.payment?"true":"false"}</p>:<p className="gap-2 text-sm text-gray-600">Payment Method: {data.paymentMethod}</p>}
+                
             </div>
             <div className="flex items-start flex-col gap-2 text-gray-600 text-sm">
                 <p>{data?.deliveryAddress?.text}</p>
@@ -54,17 +56,18 @@ function OwnerOrderCard({ data }) {
                     <option value="out of delivery">Out of Delivery</option>
                 </select>
             </div>
-              
-              {data?.shopOrders?.status=="out of delivery" && 
-              (<div className="mt-3 p-2 border rounded-lg text-sm bg-orange-50">
-                <p>Waiting for delivery boy to accept:</p>
-                {(availableBoys && availableBoys.length>0)?(
-                    availableBoys.map((b,index)=>(
-                        <div className="text-gray-300">{b.fullName}-{b.mobile}</div>
-                    ))
-                ):<div>No available delivery Boys</div>}
-                    
-                </div>)}
+
+
+            {data.shopOrders.status == "out of delivery" &&
+                <div className="mt-3 p-2 border rounded-lg text-sm bg-orange-50">
+                    {data.shopOrders.assignedDeliveryBoy ? <p>Assigned Delivery Boys:</p> : <p>Available Delivery Boys:</p>}
+                    {availableBoys.length > 0 ? (
+                        availableBoys.map((b, index) => (
+                            <div  key={index} className="text-gray-300">{b.fullName}-{b.mobile}</div>
+                        ))
+                    ) : data.shopOrders.assignedDeliveryBoy ? <div>{data.shopOrders.assignedDeliveryBoy.fullName}-{data.shopOrders.assignedDeliveryBoy.mobile}</div> : <div>Waiting for delivery boy to accept</div>}
+
+                </div>}
 
 
             <div className="text-right font-bold text-gray-800 text-sm">

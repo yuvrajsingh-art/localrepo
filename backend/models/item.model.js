@@ -15,7 +15,7 @@ const itemSchema=new mongoose.Schema({
     },
      category:{
         type:String,
-        enum:["Snacks",
+        enum:["Snackes",
             "Main Course",
             "Desserts",
             "Pizza",

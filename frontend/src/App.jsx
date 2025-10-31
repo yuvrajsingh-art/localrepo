@@ -4,7 +4,7 @@ import SignIn from "./pages/signIn";
 import SignUp from "./pages/signUp";
 import ForgotPassword from "./pages/ForgotPassword";
 import useGetCurrentUser from "./hooks/useGetCurrentUser";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Home from "./pages/Home";
 import useGetCity from "./hooks/useGetCity";
 import useGetMyShop from "./hooks/useGetMyShop";
@@ -19,9 +19,17 @@ import OrderPlaced from "./pages/OrderPlaced";
 import MyOrders from "./pages/MyOrders";
 import useGetMyOrders from "./hooks/useGetMyOrders";
 import useUpdateLocation from "./hooks/useUpdateLocation";
+import TrackOrderPage from "./pages/TrackOrderPage";
+import Shop from "./pages/Shop";
+import { useEffect } from "react";
+import {io} from 'socket.io-client'
+import { setSocket } from "./redux/userSlice";
+
 
 export const serverUrl = "http://localhost:8000"
 function App() {
+  const {userData}=useSelector(state=>state.user)
+  const dispatch =useDispatch()
   useUpdateLocation()
   useGetCurrentUser()
   useGetCity()
@@ -29,17 +37,19 @@ function App() {
   useGetShopByCity()
   useGetItemsByCity()
   useGetMyOrders()
-  const { userData } = useSelector(state => state.user)
-  // const userData = JSON.parse(localStorage.getItem("userData"));
-  console.log("user data state : ", userData);
-  // get data from localStorage
-  const storedUserData = localStorage.getItem("userData");
 
-  if (storedUserData) {
-    const userData = JSON.parse(storedUserData);
+   useEffect(()=>{
+  const socketInstance=io(serverUrl,{withCredentials:true})
+  dispatch(setSocket(socketInstance))
+  socketInstance.on('connect',()=>{ 
+    if (userData) {
+      socketInstance.emit('identity',{userId:userData._id})
+    }
+  })
+  return ()=>{
+    socketInstance.disconnect()
   }
-
-
+   },[userData?._id])
 
   return (
     <Routes>
@@ -54,6 +64,8 @@ function App() {
       <Route path='/checkout' element={userData ? <CheckOut /> : <Navigate to={"/signin"} />} />
       <Route path='/order-placed' element={userData ? <OrderPlaced /> : <Navigate to={"/signin"} />} />
       <Route path='/my-orders' element={userData ? <MyOrders /> : <Navigate to={"/signin"} />} />
+      <Route path='/track-order/:orderId' element={userData ? <TrackOrderPage /> : <Navigate to={"/signin"} />} />
+      <Route path='/shop/:shopId' element={userData ? <Shop /> : <Navigate to={"/signin"} />} />
 
     </Routes>
   );
