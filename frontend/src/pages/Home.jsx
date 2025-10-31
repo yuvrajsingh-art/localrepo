@@ -7,8 +7,9 @@ import Nev from "../components/Nav";
 
 function Home(){
     const {userData}=useSelector(state=>state.user);
-    
-    
+    // const initialUserData = JSON.parse(localStorage.getItem("userData")) || null;
+    // const userData=initialUserData.user
+    console.log("userdata",userData)
     return (
 
         <div className="w-[100vw] min-h-[100vh] pt-[100px] flex flex-col items-center bg-[#fff9f6]">
